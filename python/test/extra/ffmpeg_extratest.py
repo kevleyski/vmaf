@@ -2,7 +2,7 @@ from __future__ import absolute_import
 
 import unittest
 
-from vmaf.config import VmafConfig
+from vmaf.config import VmafConfig, VmafExternalConfig
 from vmaf.core.asset import Asset, NorefAsset
 from vmaf.core.feature_extractor import VmafFeatureExtractor
 from vmaf.core.noref_feature_extractor import MomentNorefFeatureExtractor
@@ -20,6 +20,7 @@ class ParallelFeatureExtractorTestNew(unittest.TestCase):
             self.fextractor.remove_results()
         pass
 
+    @unittest.skipIf('apps' in VmafExternalConfig.ffmpeg_path(), 'ffmpeg should not be in apps')
     def test_run_vmaf_fextractor_with_gaussian_blurring(self):
 
         ref_path = VmafConfig.test_resource_path("yuv", "src01_hrc00_576x324.yuv")
@@ -54,7 +55,7 @@ class ParallelFeatureExtractorTestNew(unittest.TestCase):
         self.assertAlmostEqual(results[0]['VMAF_feature_vif_score'], 0.45136466666666664, places=4)
         self.assertAlmostEqual(results[0]['VMAF_feature_motion_score'], 2.8779373333333331, places=4)
         self.assertAlmostEqual(results[0]['VMAF_feature_adm2_score'],0.9362876630569382, places=4)
-        self.assertAlmostEqual(results[0]['VMAF_feature_ansnr_score'], 24.109544854166668, places=4)
+        self.assertAlmostEqual(results[0]['VMAF_feature_ansnr_score'], 24.110899416666665, places=4)
 
         self.assertAlmostEqual(results[1]['VMAF_feature_vif_score'], 0.9789283541666666, places=4)
         self.assertAlmostEqual(results[1]['VMAF_feature_motion_score'], 2.8779373333333331, places=4)
@@ -69,6 +70,7 @@ class NorefFeatureExtractorTest(unittest.TestCase):
             self.fextractor.remove_results()
             pass
 
+    @unittest.skipIf('apps' in VmafExternalConfig.ffmpeg_path(), 'ffmpeg should not be in apps')
     def test_noref_moment_fextractor_with_noref_asset_notyuv_gaussianblur(self):
 
         dis_path = VmafConfig.test_resource_path("mp4", "Seeking_10_288_375.mp4")
@@ -82,16 +84,16 @@ class NorefFeatureExtractorTest(unittest.TestCase):
 
         self.fextractor = MomentNorefFeatureExtractor(
             [asset],
-            None, fifo_mode=True,
+            None, fifo_mode=False,
             result_store=None
         )
         self.fextractor.run()
 
         results = self.fextractor.results
 
-        self.assertAlmostEqual(results[0]['Moment_noref_feature_1st_score'], 63.273978452932084, places=4)
-        self.assertAlmostEqual(results[0]['Moment_noref_feature_2nd_score'], 5124.572291840278, places=4)
-        self.assertAlmostEqual(results[0]['Moment_noref_feature_var_score'], 1111.9962740092349, places=4)
+        self.assertAlmostEqual(results[0]['Moment_noref_feature_1st_score'], 63.25902145061728, places=4)
+        self.assertAlmostEqual(results[0]['Moment_noref_feature_2nd_score'], 5123.705637307099, places=4)
+        self.assertAlmostEqual(results[0]['Moment_noref_feature_var_score'], 1113.0346638689637, places=4)
 
 
 class QualityRunnerTest(unittest.TestCase):
@@ -104,6 +106,7 @@ class QualityRunnerTest(unittest.TestCase):
     def setUp(self):
         self.result_store = FileSystemResultStore()
 
+    @unittest.skipIf('apps' in VmafExternalConfig.ffmpeg_path(), 'ffmpeg should not be in apps')
     def test_run_psnr_runner_with_notyuv_gblur(self):
 
         ref_path = VmafConfig.test_resource_path("mp4", "Seeking_10_288_375.mp4")
@@ -118,15 +121,16 @@ class QualityRunnerTest(unittest.TestCase):
                                   })
         self.runner = PsnrQualityRunner(
             [asset],
-            None, fifo_mode=True,
+            None, fifo_mode=False,
             delete_workdir=True,
             result_store=None
         )
         self.runner.run()
 
         results = self.runner.results
-        self.assertAlmostEqual(results[0]['PSNR_score'], 51.12090432666667, places=4)
+        self.assertAlmostEqual(results[0]['PSNR_score'], 50.99313338666667, places=4)
 
+    @unittest.skipIf('apps' in VmafExternalConfig.ffmpeg_path(), 'ffmpeg should not be in apps')
     def test_run_vmaf_runner_with_notyuv_gblur(self):
 
         ref_path = VmafConfig.test_resource_path("mp4", "Seeking_30_480_1050.mp4")
@@ -148,7 +152,7 @@ class QualityRunnerTest(unittest.TestCase):
         self.runner.run()
 
         results = self.runner.results
-        self.assertAlmostEqual(results[0]['VMAF_score'], 77.28044458354246, places=4)
+        self.assertAlmostEqual(results[0]['VMAF_score'], 77.28938600125885, places=4)
 
     def test_run_vmaf_runner_with_yuv_lutyuv(self):
         ref_path = VmafConfig.test_resource_path("yuv", "src01_hrc00_576x324.yuv")
@@ -170,4 +174,4 @@ class QualityRunnerTest(unittest.TestCase):
         self.runner.run()
 
         results = self.runner.results
-        self.assertAlmostEqual(results[0]['VMAF_score'], 78.06249411099073, places=4)
+        self.assertAlmostEqual(results[0]['VMAF_score'], 77.18873019841408, places=4)

@@ -41,28 +41,28 @@ class CommandLineTest(unittest.TestCase):
             os.remove(self.batch_filename)
 
     def test_run_testing_vmaf(self):
-        exe = VmafConfig.root_path('run_testing')
+        exe = VmafConfig.root_path('python', 'vmaf', 'script', 'run_testing.py')
         cmd = "{exe} VMAF {dataset} --parallelize --suppress-plot".format(
             exe=exe, dataset=self.dataset_filename)
         ret = run_process(cmd, shell=True)
         self.assertEqual(ret, 0)
 
     def test_run_testing_vmaf_raw_dataset(self):
-        exe = VmafConfig.root_path('run_testing')
+        exe = VmafConfig.root_path('python', 'vmaf', 'script', 'run_testing.py')
         cmd = "{exe} VMAF {dataset} --parallelize --suppress-plot".format(
             exe=exe, dataset=self.raw_dataset_filename)
         ret = run_process(cmd, shell=True)
         self.assertEqual(ret, 0)
 
     def test_run_testing_psnr(self):
-        exe = VmafConfig.root_path('run_testing')
+        exe = VmafConfig.root_path('python', 'vmaf', 'script', 'run_testing.py')
         cmd = "{exe} PSNR {dataset} --parallelize --suppress-plot".format(
             exe=exe, dataset=self.dataset_filename)
         ret = run_process(cmd, shell=True)
         self.assertEqual(ret, 0)
 
     def test_run_vmaf_training(self):
-        exe = VmafConfig.root_path('run_vmaf_training')
+        exe = VmafConfig.root_path('python', 'vmaf', 'script', 'run_vmaf_training.py')
         cmd = "{exe} {dataset} {param} {param} {output} --parallelize --suppress-plot".format(
             exe=exe,
             dataset=self.dataset_filename,
@@ -72,7 +72,7 @@ class CommandLineTest(unittest.TestCase):
         self.assertEqual(ret, 0)
 
     def test_run_vmaf_training_raw_dataset(self):
-        exe = VmafConfig.root_path('run_vmaf_training')
+        exe = VmafConfig.root_path('python', 'vmaf', 'script', 'run_vmaf_training.py')
         cmd = "{exe} {dataset} {param} {param} {output} --parallelize --suppress-plot".format(
             exe=exe,
             dataset=self.raw_dataset_filename,
@@ -89,7 +89,7 @@ class CommandLineTest(unittest.TestCase):
         ret = run_process(cmd, shell=True)
         self.assertEqual(ret, 0)
 
-        exe = VmafConfig.root_path('run_vmaf_in_batch')
+        exe = VmafConfig.root_path('python', 'vmaf', 'script', 'run_vmaf_in_batch.py')
         cmd = "{exe} {input} --parallelize >/dev/null 2>&1".format(
             exe=exe, input=self.batch_filename)
         ret = run_process(cmd, shell=True)
@@ -103,14 +103,14 @@ class CommandLineTest(unittest.TestCase):
         ret = run_process(cmd, shell=True)
         self.assertEqual(ret, 0)
 
-        exe = VmafConfig.root_path('run_vmaf_in_batch')
+        exe = VmafConfig.root_path('python', 'vmaf', 'script', 'run_vmaf_in_batch.py')
         cmd = "{exe} {input} --parallelize --ci >/dev/null 2>&1".format(
             exe=exe, input=self.batch_filename)
         ret = run_process(cmd, shell=True)
         self.assertEqual(ret, 0)
 
     def test_run_vmaf(self):
-        exe = VmafConfig.root_path('run_vmaf')
+        exe = VmafConfig.root_path('python', 'vmaf', 'script', 'run_vmaf.py')
         line = 'yuv420p 576 324 {root}/python/test/resource/yuv/src01_hrc00_576x324.yuv ' \
                '{root}/python/test/resource/yuv/src01_hrc01_576x324.yuv'.format(root=VmafConfig.root_path())
         cmd = "{exe} {line} >/dev/null 2>&1".format(line=line, exe=exe)
@@ -118,7 +118,7 @@ class CommandLineTest(unittest.TestCase):
         self.assertEqual(ret, 0)
 
     def test_run_vmaf_ci(self):
-        exe = VmafConfig.root_path('run_vmaf')
+        exe = VmafConfig.root_path('python', 'vmaf', 'script', 'run_vmaf.py')
         line = 'yuv420p 576 324 {root}/python/test/resource/yuv/src01_hrc00_576x324.yuv ' \
                '{root}/python/test/resource/yuv/src01_hrc01_576x324.yuv'.format(root=VmafConfig.root_path())
         cmd = "{exe} {line} --ci >/dev/null 2>&1".format(line=line, exe=exe)
@@ -126,7 +126,7 @@ class CommandLineTest(unittest.TestCase):
         self.assertEqual(ret, 0)
 
     def test_run_vmaf_both_local_explain_and_ci(self):
-        exe = VmafConfig.root_path('run_vmaf')
+        exe = VmafConfig.root_path('python', 'vmaf', 'script', 'run_vmaf.py')
         line = 'yuv420p 576 324 {root}/python/test/resource/yuv/src01_hrc00_576x324.yuv ' \
                '{root}/python/test/resource/yuv/src01_hrc01_576x324.yuv'.format(root=VmafConfig.root_path())
         cmd = "{exe} {line} --local-explain --ci >/dev/null 2>&1".format(line=line, exe=exe)
@@ -134,7 +134,7 @@ class CommandLineTest(unittest.TestCase):
         self.assertEqual(ret, 2)
 
     def test_run_psnr(self):
-        exe = VmafConfig.root_path('run_psnr')
+        exe = VmafConfig.root_path('python', 'vmaf', 'script', 'run_psnr.py')
         line = 'yuv420p 576 324 {root}/python/test/resource/yuv/src01_hrc00_576x324.yuv ' \
                '{root}/python/test/resource/yuv/src01_hrc01_576x324.yuv'.format(root=VmafConfig.root_path())
         cmd = "{exe} {line} >/dev/null 2>&1".format(line=line, exe=exe)
@@ -142,13 +142,13 @@ class CommandLineTest(unittest.TestCase):
         self.assertEqual(ret, 0)
 
     def test_run_cleaning_cache_psnr(self):
-        exe = VmafConfig.root_path('run_testing')
+        exe = VmafConfig.root_path('python', 'vmaf', 'script', 'run_testing.py')
         cmd = "{exe} PSNR {dataset} --parallelize --cache-result --suppress-plot".format(
             exe=exe, dataset=self.dataset_filename)
         ret = run_process(cmd, shell=True)
         self.assertEqual(ret, 0)
 
-        exe = VmafConfig.root_path('python', 'script', 'run_cleaning_cache.py')
+        exe = VmafConfig.root_path('python', 'vmaf', 'script', 'run_cleaning_cache.py')
         cmd = "{exe} PSNR {dataset}".format(
             exe=exe, dataset=self.dataset_filename)
         ret = run_process(cmd, shell=True)
@@ -175,7 +175,7 @@ class VmafossexecCommandLineTest(unittest.TestCase):
 
     def test_run_vmafossexec_nonexist_model_file(self):
         exe = ExternalProgram.vmafossexec
-        cmd = "{exe} yuv420p 576 324 {ref} {dis} {model}".format(
+        cmd = "{exe} yuv420p 576 324 {ref} {dis} {model} > /dev/null 2>&1".format(
             exe=exe, ref=VmafConfig.test_resource_path("yuv", "src01_hrc00_576x324.yuv"),
             dis=VmafConfig.test_resource_path("yuv", "src01_hrc01_576x324.yuv"), model=VmafConfig.model_path("other_models", "vmaf_v0.6.0.pkl_XXX"))
         ret = subprocess.call(cmd, shell=True)
@@ -183,7 +183,7 @@ class VmafossexecCommandLineTest(unittest.TestCase):
 
     def test_run_vmafossexec_wrong_model_fmt(self):
         exe = ExternalProgram.vmafossexec
-        cmd = "{exe} yuv420p 576 324 {ref} {dis} {model}".format(
+        cmd = "{exe} yuv420p 576 324 {ref} {dis} {model} > /dev/null 2>&1".format(
             exe=exe, ref=VmafConfig.test_resource_path("yuv", "src01_hrc00_576x324.yuv"),
             dis=VmafConfig.test_resource_path("yuv", "src01_hrc01_576x324.yuv"), model=VmafConfig.model_path("other_models", "vmaf_v0.6.0.pkl.model"))
         ret = subprocess.call(cmd, shell=True)
@@ -191,23 +191,23 @@ class VmafossexecCommandLineTest(unittest.TestCase):
 
     def test_run_vmafossexec_nonexist_ref_file(self):
         exe = ExternalProgram.vmafossexec
-        cmd = "{exe} yuv420p 576 324 {ref} {dis} {model}".format(
-            exe=exe, ref=VmafConfig.test_resource_path("yuv", "src01_hrc00_576x324_XXX.yuv"),
+        cmd = "{exe} yuv420p 576 324 {ref} {dis} {model} > /dev/null 2>&1".format(
+            exe=exe, ref=VmafConfig.resource_path("yuv", "src01_hrc00_576x324_XXX.yuv"),
             dis=VmafConfig.test_resource_path("yuv", "src01_hrc01_576x324.yuv"), model=VmafConfig.model_path("other_models", "vmaf_v0.6.0.pkl"))
         ret = subprocess.call(cmd, shell=True)
         self.assertEqual(ret, self.RC_ARGUMENT_ISSUE)
 
     def test_run_vmafossexec_nonexist_dis_file(self):
         exe = ExternalProgram.vmafossexec
-        cmd = "{exe} yuv420p 576 324 {ref} {dis} {model}".format(
+        cmd = "{exe} yuv420p 576 324 {ref} {dis} {model} > /dev/null 2>&1".format(
             exe=exe, ref=VmafConfig.test_resource_path("yuv", "src01_hrc00_576x324.yuv"),
-            dis=VmafConfig.test_resource_path("yuv", "src01_hrc01_576x324_XXX.yuv"), model=VmafConfig.model_path("other_models", "vmaf_v0.6.0.pkl"))
+            dis=VmafConfig.resource_path("yuv", "src01_hrc01_576x324_XXX.yuv"), model=VmafConfig.model_path("other_models", "vmaf_v0.6.0.pkl"))
         ret = subprocess.call(cmd, shell=True)
         self.assertEqual(ret, self.RC_ARGUMENT_ISSUE)
 
     def test_run_vmafossexec_unknown_yuv_fmt(self):
         exe = ExternalProgram.vmafossexec
-        cmd = "{exe} yuv420p_XXX 576 324 {ref} {dis} {model}".format(
+        cmd = "{exe} yuv420p_XXX 576 324 {ref} {dis} {model} > /dev/null 2>&1".format(
             exe=exe, ref=VmafConfig.test_resource_path("yuv", "src01_hrc00_576x324.yuv"),
             dis=VmafConfig.test_resource_path("yuv", "src01_hrc01_576x324.yuv"), model=VmafConfig.model_path("other_models", "vmaf_v0.6.0.pkl"))
         ret = subprocess.call(cmd, shell=True)
@@ -215,7 +215,7 @@ class VmafossexecCommandLineTest(unittest.TestCase):
 
     def test_run_vmafossexec_odd_resolution(self):
         exe = ExternalProgram.vmafossexec
-        cmd = "{exe} yuv420p 575 323 {ref} {dis} {model}".format(
+        cmd = "{exe} yuv420p 575 323 {ref} {dis} {model} > /dev/null 2>&1".format(
             exe=exe, ref=VmafConfig.test_resource_path("yuv", "src01_hrc00_576x324.yuv"),
             dis=VmafConfig.test_resource_path("yuv", "src01_hrc01_576x324.yuv"), model=VmafConfig.model_path("other_models", "vmaf_v0.6.0.pkl"))
         ret = subprocess.call(cmd, shell=True)
@@ -223,7 +223,7 @@ class VmafossexecCommandLineTest(unittest.TestCase):
 
     def test_run_vmafossexec_wrong_wh_format(self):
         exe = ExternalProgram.vmafossexec
-        cmd = "{exe} yuv420p 576 abc {ref} {dis} {model}".format(
+        cmd = "{exe} yuv420p 576 abc {ref} {dis} {model} > /dev/null 2>&1".format(
             exe=exe, ref=VmafConfig.test_resource_path("yuv", "src01_hrc00_576x324.yuv"),
             dis=VmafConfig.test_resource_path("yuv", "src01_hrc01_576x324.yuv"), model=VmafConfig.model_path("other_models", "vmaf_v0.6.0.pkl"))
         ret = subprocess.call(cmd, shell=True)
@@ -231,7 +231,7 @@ class VmafossexecCommandLineTest(unittest.TestCase):
 
     def test_run_vmafossexec_wrong_width_value(self):
         exe = ExternalProgram.vmafossexec
-        cmd = "{exe} yuv420p 0 324 {ref} {dis} {model}".format(
+        cmd = "{exe} yuv420p 0 324 {ref} {dis} {model} > /dev/null 2>&1".format(
             exe=exe, ref=VmafConfig.test_resource_path("yuv", "src01_hrc00_576x324.yuv"),
             dis=VmafConfig.test_resource_path("yuv", "src01_hrc01_576x324.yuv"), model=VmafConfig.model_path("other_models", "vmaf_v0.6.0.pkl"))
         ret = subprocess.call(cmd, shell=True)
@@ -239,7 +239,7 @@ class VmafossexecCommandLineTest(unittest.TestCase):
 
     def test_run_vmafossexec_unknown_log_fmt(self):
         exe = ExternalProgram.vmafossexec
-        cmd = "{exe} yuv420p 576 324 {ref} {dis} {model} --log-fmt xml_XXX".format(
+        cmd = "{exe} yuv420p 576 324 {ref} {dis} {model} --log-fmt xml_XXX > /dev/null 2>&1".format(
             exe=exe, ref=VmafConfig.test_resource_path("yuv", "src01_hrc00_576x324.yuv"),
             dis=VmafConfig.test_resource_path("yuv", "src01_hrc01_576x324.yuv"), model=VmafConfig.model_path("other_models", "vmaf_v0.6.0.pkl"))
         ret = subprocess.call(cmd, shell=True)
@@ -247,7 +247,7 @@ class VmafossexecCommandLineTest(unittest.TestCase):
 
     def test_run_vmafossexec_unknown_pooling(self):
         exe = ExternalProgram.vmafossexec
-        cmd = "{exe} yuv420p 576 324 {ref} {dis} {model} --pool mean_XXX".format(
+        cmd = "{exe} yuv420p 576 324 {ref} {dis} {model} --pool mean_XXX > /dev/null 2>&1".format(
             exe=exe, ref=VmafConfig.test_resource_path("yuv", "src01_hrc00_576x324.yuv"),
             dis=VmafConfig.test_resource_path("yuv", "src01_hrc01_576x324.yuv"), model=VmafConfig.model_path("other_models", "vmaf_v0.6.0.pkl"))
         ret = subprocess.call(cmd, shell=True)
@@ -255,7 +255,7 @@ class VmafossexecCommandLineTest(unittest.TestCase):
 
     def test_run_vmafossexec_wrong_thread(self):
         exe = ExternalProgram.vmafossexec
-        cmd = "{exe} yuv420p 576 324 {ref} {dis} {model} --thread -1 --subsample 2".format(
+        cmd = "{exe} yuv420p 576 324 {ref} {dis} {model} --thread -1 --subsample 2 > /dev/null 2>&1".format(
             exe=exe, ref=VmafConfig.test_resource_path("yuv", "src01_hrc00_576x324.yuv"),
             dis=VmafConfig.test_resource_path("yuv", "src01_hrc01_576x324.yuv"), model=VmafConfig.model_path("other_models", "vmaf_v0.6.0.pkl"))
         ret = subprocess.call(cmd, shell=True)
@@ -263,7 +263,7 @@ class VmafossexecCommandLineTest(unittest.TestCase):
 
     def test_run_vmafossexec_wrong_subsample(self):
         exe = ExternalProgram.vmafossexec
-        cmd = "{exe} yuv420p 576 324 {ref} {dis} {model} --thread 0 --subsample 0".format(
+        cmd = "{exe} yuv420p 576 324 {ref} {dis} {model} --thread 0 --subsample 0 > /dev/null 2>&1".format(
             exe=exe, ref=VmafConfig.test_resource_path("yuv", "src01_hrc00_576x324.yuv"),
             dis=VmafConfig.test_resource_path("yuv", "src01_hrc01_576x324.yuv"), model=VmafConfig.model_path("other_models", "vmaf_v0.6.0.pkl"))
         ret = subprocess.call(cmd, shell=True)

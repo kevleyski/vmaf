@@ -5,127 +5,53 @@ The VMAF Python library offers full functionalities from running basic VMAF comm
 
 ## Prerequisites
 
-The VMAF Python library has its core feature extraction library written in C, and the rest scripting code written in Python. To build the C code, it requires `gcc` and `g++` (>=4.8). To run scripts and tests, it requires Python 3.
+In order to use the Python library, first install the `libvmaf` C library according to [the instructions](../../libvmaf/README.md).
 
-It also requires a number of Python packages:
-
-  - [`numpy`](http://www.numpy.org/) (>=1.12.0)
-  - [`scipy`](http://www.scipy.org/) (>=0.17.1)
-  - [`matplotlib`](http://matplotlib.org/1.3.1/index.html) (>=2.0.0)
-  - [`pandas`](http://pandas.pydata.org/) (>=0.19.2)
-  - [`scikit-learn`](http://scikit-learn.org/stable/) (>=0.18.1)
-  - [`scikit-image`](http://scikit-image.org/) (>=0.13.1)
-  - [`h5py`](http://www.h5py.org/) (>=2.6.0)
-  - [`sureal`](https://github.com/Netflix/sureal) (>=0.1.1)
-
-You will need to install `gfortran` for compiling `scipy`, `freetype` and `pkg-config` required by `matplotlib`, and `hdf5` required by `h5py` (C header files needed). These can't be compiled from source here.
-
-### Prerequisite Installation
-
-#### Linux (Ubuntu)
+### Linux (Ubuntu)
 
 Install the dependencies:
 
 ```
 sudo apt-get update -qq && \
 sudo apt-get install -y \
-  pkg-config gfortran libhdf5-dev libfreetype6-dev liblapack-dev \
   python3 \
   python3-dev \
   python3-pip \
   python3-setuptools \
+  python3-wheel \
   python3-tk
 ```
 
-Upgrade `pip` to the newest version:
+### macOS
+
+First, install [Homebrew](https://brew.sh), then install the dependencies:
 
 ```
-sudo -H pip3 install --upgrade pip
+brew install python
 ```
 
-Then install the required Python packages:
+This will install an up-to-date version of Python and `pip` (see [Homebrew's Python guide](https://docs.brew.sh/Homebrew-and-Python) for more info).
+
+## Installation
+
+Install the required Python packages from the `python` directory:
 
 ```
-pip3 install --user numpy scipy matplotlib pandas scikit-learn scikit-image h5py sureal
+cd python
+pip3 install --user .
 ```
 
-Make sure your user install executable directory is on your PATH. Add this to the end of `~/.bashrc` and restart your shell:
+Make sure your user install executable directory is on your PATH. Add this to the end of `~/.bashrc` (or `~/.bash_profile` under macOS) and restart your shell:
 
 ```
 export PATH="$PATH:$HOME/.local/bin"
 ```
 
-#### macOS
-
-First, install [Homebrew](https://brew.sh), then install the dependencies:
-
-```
-brew install gcc freetype pkg-config homebrew/core/hdf5 python@2 ninja
-```
-
-This will install an up-to-date version of Python 2.7 and `pip` (see [Homebrew's Python guide](https://docs.brew.sh/Homebrew-and-Python) for more info).
-
-Now install the required Python packages:
-
-```
-brew install numpy scipy
-pip install matplotlib notebook pandas sympy nose scikit-learn scikit-image h5py sureal
-pip3 install meson
-```
-
-### Troubleshooting
-
-You can verify if these packages are properly installed and its version/location by:
-
-```
-python3 -c 'import numpy as pkg; print(pkg.__version__); print(pkg.__file__)'
-python3 -c 'import scipy as pkg; print(pkg.__version__); print(pkg.__file__)'
-python3 -c 'import matplotlib as pkg; print(pkg.__version__); print(pkg.__file__)'
-python3 -c 'import pandas as pkg; print(pkg.__version__); print(pkg.__file__)'
-python3 -c 'import sklearn as pkg; print(pkg.__version__); print(pkg.__file__)'
-python3 -c 'import skimage as pkg; print(pkg.__version__); print(pkg.__file__)'
-python3 -c 'import h5py as pkg; print(pkg.__version__); print(pkg.__file__)'
-python3 -c 'import sureal as pkg; print(pkg.__version__); print(pkg.__file__)'
-```
-
-If you see that the printed version number is older than the ones aforementioned, it could suggest that a previously installed package with the same name but older version at a different location may have overshadowed the new one. Make sure that the new one's path appears early in the path list, which can be printed by:
-
-```
-python3 -c 'import sys; print(sys.path)'
-```
-
-(Or simply delete the older one).
-
-## Installation
-
-After cloning VMAF repository, `cd` to the repo directory and run:
-
-```
-make
-```
-
-to build the binaries.
-
-Add the `python/src` subdirectories to the environment variable `PYTHONPATH`:
-
-```
-export PYTHONPATH="$(pwd)/python/src:$PYTHONPATH"
-```
-
-You can also add it to the environment permanently, by appending to `~/.bashrc`:
-
-```
-echo export PYTHONPATH="$(pwd)/python/src:$PYTHONPATH" >> ~/.bashrc
-source ~/.bashrc
-```
-
-Under macOS, use `~/.bash_profile` instead.
-
 ## Testing
 
 The package has thus far been tested on Ubuntu 16.04 LTS and macOS 10.13.
 
-After installation, run:
+After installation, run this from the repository root:
 
 ```
 ./unittest
@@ -142,7 +68,7 @@ One can run VMAF either in single mode by `run_vmaf` or in batch mode by `run_vm
 To run VMAF on a single reference/distorted video pair, run:
 
 ```
-./run_vmaf format width height reference_path distorted_path [--out-fmt output_format]
+run_vmaf format width height reference_path distorted_path [--out-fmt output_format]
 ```
 
 The arguments are the following:
@@ -160,7 +86,7 @@ The arguments are the following:
 For example:
 
 ```
-./run_vmaf yuv420p 576 324 \
+run_vmaf yuv420p 576 324 \
   python/test/resource/yuv/src01_hrc00_576x324.yuv \
   python/test/resource/yuv/src01_hrc01_576x324.yuv \
   --out-fmt json
@@ -206,7 +132,7 @@ yuv420p 576 324 python/test/resource/yuv/src01_hrc00_576x324.yuv \
 After that, run:
 
 ```
-./run_vmaf_in_batch input_file [--out-fmt out_fmt] [--parallelize]
+run_vmaf_in_batch input_file [--out-fmt out_fmt] [--parallelize]
 ```
 
 where enabling `--parallelize` allows execution on multiple reference-distorted video pairs in parallel.
@@ -214,7 +140,7 @@ where enabling `--parallelize` allows execution on multiple reference-distorted 
 For example:
 
 ```
-./run_vmaf_in_batch resource/example/example_batch_input --parallelize
+run_vmaf_in_batch resource/example/example_batch_input --parallelize
 ```
 
 ### Using `ffmpeg2vmaf`
@@ -222,7 +148,7 @@ For example:
 There is also an `ffmpeg2vmaf` command line tool which can compare any file format decodable by `ffmpeg`. `ffmpeg2vmaf` essentially pipes FFmpeg-decoded videos to VMAF. Note that you need a recent version of `ffmpeg` installed (for the first time, run the command line, follow the prompted instruction to specify the path of `ffmpeg`). 
 
 ```
-./ffmpeg2vmaf quality_width quality_height reference_path distorted_path \
+ffmpeg2vmaf quality_width quality_height reference_path distorted_path \
   [--model model_path] [--out-fmt out_fmt]
 ```
 
@@ -237,19 +163,19 @@ VMAF follows a machine-learning based approach to first extract a number of qual
 In addition to the basic commands, the VMAF package also provides a framework to allow any user to train his/her own perceptual quality assessment model. For example, directory [`model`](../../model) contains a number of pre-trained models, which can be loaded by the aforementioned commands:
 
 ```
-./run_vmaf format width height reference_path distorted_path [--model model_path]
-./run_vmaf_in_batch input_file [--model model_path] --parallelize
+run_vmaf format width height reference_path distorted_path [--model model_path]
+run_vmaf_in_batch input_file [--model model_path] --parallelize
 ```
 
 For example:
 
 ```
-./run_vmaf yuv420p 576 324 \
+run_vmaf yuv420p 576 324 \
   python/test/resource/yuv/src01_hrc00_576x324.yuv \
   python/test/resource/yuv/src01_hrc01_576x324.yuv \
   --model model/nflxtrain_vmafv3.pkl
 
-./run_vmaf_in_batch resource/example/example_batch_input \
+run_vmaf_in_batch resource/example/example_batch_input \
   --model model/nflxtrain_vmafv3.pkl --parallelize
 ```
 
@@ -289,7 +215,7 @@ See the directory [`resource/dataset`](../../resource/dataset) for more examples
 Once a dataset is created, first validate the dataset using existing VMAF or other (PSNR, SSIM or MS-SSIM) metrics. Run:
 
 ```
-./run_testing quality_type test_dataset_file \
+run_testing quality_type test_dataset_file \
 [--vmaf-model optional_VMAF_model_path] [--cache-result] [--parallelize]
 ```
 
@@ -302,7 +228,7 @@ Enabling `--parallelize` allows execution on multiple reference-distorted video 
 For example:
 
 ```
-./run_testing VMAF resource/example/example_dataset.py \
+run_testing VMAF resource/example/example_dataset.py \
   --cache-result --parallelize
 ```
 
@@ -334,14 +260,14 @@ python3 python/script/run_cleaning_cache.py VMAF \
 Now that we are confident that the dataset is created correctly and we have some benchmark result on existing metrics, we proceed to train a new quality assessment model. Run:
 
 ```
-./run_vmaf_training train_dataset_filepath feature_param_file model_param_file \
+run_vmaf_training train_dataset_filepath feature_param_file model_param_file \
   output_model_file [--cache-result] [--parallelize]
 ```
 
 For example:
 
 ```
-./run_vmaf_training resource/example/example_dataset.py \
+run_vmaf_training resource/example/example_dataset.py \
   resource/feature_param/vmaf_feature_v2.py \
   resource/model_param/libsvmnusvr_v2.py \
   workspace/model/test_model.pkl \
@@ -393,13 +319,13 @@ The commands `./run_vmaf_training` and `./run_testing` also support custom subje
 The subjective model option can be specified with option `--subj-model subjective_model`, for example:
 
 ```
-./run_vmaf_training resource/example/example_raw_dataset.py \
+run_vmaf_training resource/example/example_raw_dataset.py \
   resource/feature_param/vmaf_feature_v2.py \
   resource/model_param/libsvmnusvr_v2.py \
   workspace/model/test_model.pkl \
   --subj-model MLE --cache-result --parallelize
 
-./run_testing VMAF resource/example/example_raw_dataset.py \
+run_testing VMAF resource/example/example_raw_dataset.py \
   --subj-model MLE --cache-result --parallelize
 ```
 
@@ -423,21 +349,21 @@ Overtime, a number of helper tools have been incorporated into the VDK, to facil
 
 ### BD-Rate Calculator
 
-A Bjøntegaard-Delta (BD) rate [implementation](../../python/src/vmaf/tools/bd_rate_calculator.py) is added. Example usage can be found [here](../../python/test/bd_rate_calculator_test.py). The implementation is validated against [MPEG JCTVC-E137](http://phenix.it-sudparis.eu/jct/doc_end_user/documents/5_Geneva/wg11/JCTVC-E137-v1.zip).
+A Bjøntegaard-Delta (BD) rate [implementation](../../python/vmaf/tools/bd_rate_calculator.py) is added. Example usage can be found [here](../../python/test/bd_rate_calculator_test.py). The implementation is validated against [MPEG JCTVC-E137](http://phenix.it-sudparis.eu/jct/doc_end_user/documents/5_Geneva/wg11/JCTVC-E137-v1.zip).
 
 ### LIME (Local-Explainer Model-Agnostic Explanation) Implementation
 
 An implementation of [LIME](https://arxiv.org/pdf/1602.04938.pdf) is also added as part of the repository. The main idea is to perform a local linear approximation to any regressor or classifier and then use the coefficients of the linearized model as indicators of feature importance. LIME can be used as part of the VMAF regression framework, for example:
 
 ```
-./run_vmaf yuv420p 1920 1080 NFLX_dataset_public/ref/OldTownCross_25fps.yuv \
+run_vmaf yuv420p 1920 1080 NFLX_dataset_public/ref/OldTownCross_25fps.yuv \
     NFLX_dataset_public/dis/OldTownCross_90_1080_4300.yuv --local-explain
 ```
 
 Naturally, LIME can also be applied to any other regression scheme as long as there exists a pre-trained model. For example, applying to BRISQUE:
 
 ```
-./run_vmaf yuv420p 1920 1080 NFLX_dataset_public/ref/OldTownCross_25fps.yuv \
+run_vmaf yuv420p 1920 1080 NFLX_dataset_public/ref/OldTownCross_25fps.yuv \
     NFLX_dataset_public/dis/OldTownCross_90_1080_4300.yuv --local-explain \
     --model model/vmaf_brisque_all_v0.0rc.pkl
 ```

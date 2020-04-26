@@ -3,6 +3,8 @@ ptools_path = './third_party/ptools/'
 opencontainers_path = ptools_path + 'opencontainers_1_8_4'
 opencontainers_include = include_directories(opencontainers_path + '/include')
 
+vmaf_soversion = vmaf_api_version_major
+
 if cc.get_id() != 'msvc'
     ptools_cpp_args = [
         '-fno-strict-aliasing',
@@ -139,6 +141,8 @@ libvmaf = both_libraries(
         libvmaf_feature_static_lib.extract_all_objects(),
     ],
     install: true,
+    soversion: vmaf_soversion,
+    version: vmaf_soname_version,
 )
 
 libvmaf_rc_include = include_directories(
@@ -164,6 +168,7 @@ libvmaf_rc_feature_sources = [
   feature_src_dir + 'float_ms_ssim.c',
   feature_src_dir + 'float_vif.c',
   feature_src_dir + 'integer_ssim.c',
+  feature_src_dir + 'float_moment.c',
 ]
 
 libvmaf_rc_feature_static_lib = static_library(
